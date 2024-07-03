@@ -38,16 +38,16 @@ public class KubernetesResourceService {
         return Optional.of(api);
     }
 
-    protected Optional<String> configFile() {
-        try {
-            Path filePath = Paths.get(configFilePath);
-            byte[] fileBytes = Files.readAllBytes(filePath);
-            String configFile = new String(fileBytes);
-            return Optional.of(configFile);
-        } catch (IOException e) {
-            LOGGER.error("Error while getting Kubernetes configFile: {}", e.getMessage());
+    public Optional<SharedInformerFactory> getSharedInformerFactory() {
+        Optional<ApiClient> clientOptional = getApiClient();
+        if (clientOptional.isEmpty()) {
+            LOGGER.warn("ApiClient is null.");
             return Optional.empty();
         }
+        ApiClient client = clientOptional.get();
+        client.setReadTimeout(0);
+        SharedInformerFactory factory = new SharedInformerFactory(client);
+        return Optional.of(factory);
     }
 
     public Optional<NetworkingV1Api> getNetworkingApi() {
@@ -61,7 +61,19 @@ public class KubernetesResourceService {
         return Optional.of(api);
     }
 
-    protected Optional<ApiClient> getApiClient() {
+    private Optional<String> configFile() {
+        try {
+            Path filePath = Paths.get(configFilePath);
+            byte[] fileBytes = Files.readAllBytes(filePath);
+            String configFile = new String(fileBytes);
+            return Optional.of(configFile);
+        } catch (IOException e) {
+            LOGGER.error("Error while getting Kubernetes configFile: {}", e.getMessage());
+            return Optional.empty();
+        }
+    }
+
+    private Optional<ApiClient> getApiClient() {
         Optional<String> configFileOptional = configFile();
         if (configFileOptional.isEmpty()) {
             LOGGER.error("Config file is empty or null.");
@@ -77,17 +89,5 @@ public class KubernetesResourceService {
             LOGGER.error("Error while getting kubernetes client from config file");
             return Optional.empty();
         }
-    }
-
-    public Optional<SharedInformerFactory> getSharedInformerFactory() {
-        Optional<ApiClient> clientOptional = getApiClient();
-        if (clientOptional.isEmpty()) {
-            LOGGER.warn("ApiClient is null.");
-            return Optional.empty();
-        }
-        ApiClient client = clientOptional.get();
-        client.setReadTimeout(0);
-        SharedInformerFactory factory = new SharedInformerFactory(client);
-        return Optional.of(factory);
     }
 }
