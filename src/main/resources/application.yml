@@ -1,0 +1,8 @@
+server:
+  servlet:
+    context-path: /kubernetes-manager/api
+  port: 8080
+
+kubernetes:
+  config-file:
+    path: ${kubernetes.config-file.path}

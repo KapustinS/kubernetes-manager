@@ -1,0 +1,144 @@
+openapi: 3.0.1
+servers:
+  - url: '{protocol}:{domain}/kubernetes-manager/api'
+
+info:
+  title: Kubernetes manager Service API
+  description: Kubernetes manager Service API
+  version: 1.0.0
+
+paths:
+  /pod/list:
+    get:
+      tags:
+        - ResourceList
+      operationId: getPods
+      description: Get list of pods
+      responses:
+        200:
+          description: Get list of pods
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PodListResponse'
+
+  /node/list:
+    get:
+      tags:
+        - ResourceList
+      operationId: getNodes
+      description: Get list of nodes
+      responses:
+        200:
+          description: Get list of nodes
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NodeListResponse'
+
+  /ingress/{namespace}/list:
+    get:
+      tags:
+        - ResourceList
+      operationId: getIngresses
+      description: Get list of ingresses
+      parameters:
+        - name: namespace
+          in: path
+          required: true
+          schema:
+              type: string
+      responses:
+        200:
+          description: Get list of ingresses
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IngressListResponse'
+
+components:
+  schemas:
+    PodListResponse:
+      type: object
+      properties:
+        pods:
+          type: array
+          items:
+            $ref: '#/components/schemas/Pod'
+        total:
+          type: integer
+          format: int32
+
+    Pod:
+      type: object
+      properties:
+        name:
+          type: string
+        namespace:
+          type: string
+        status:
+          type: string
+        restartCount:
+          type: integer
+          format: int32
+        creationTimestamp:
+          type: string
+          format: date-time
+        labels:
+          type: object
+          additionalProperties:
+            type: string
+        annotations:
+          type: object
+          additionalProperties:
+            type: string
+
+    NodeListResponse:
+      type: object
+      properties:
+        nodes:
+          type: array
+          items:
+            $ref: '#/components/schemas/Node'
+        total:
+          type: integer
+          format: int32
+
+    Node:
+      type: object
+      properties:
+        name:
+          type: string
+        status:
+          type: string
+        labels:
+          type: object
+          additionalProperties:
+            type: string
+        annotations:
+          type: object
+          additionalProperties:
+            type: string
+
+    IngressListResponse:
+      type: object
+      properties:
+        ingresses:
+          type: array
+          items:
+            $ref: '#/components/schemas/Ingress'
+        total:
+          type: integer
+          format: int32
+
+    Ingress:
+      type: object
+      properties:
+        name:
+          type: string
+        namespace:
+          type: string
+        host:
+          type: string
+        path:
+          type: string
