@@ -2,6 +2,7 @@ package ru.kapustin.kubernetesmanager.service.business;
 
 import io.kubernetes.client.openapi.models.*;
 import lombok.RequiredArgsConstructor;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Service;
 import ru.kapustin.kubernetesmanager.mapper.ResourcesMapper;
 import ru.kapustin.kubernetesmanager.model.Ingress;
@@ -52,11 +53,15 @@ public class IngressListService {
                 .map(V1IngressSpec::getRules)
                 .stream()
                 .flatMap(Collection::stream)
-                .flatMap(rule -> Optional.ofNullable(rule.getHttp())
-                        .map(http -> http.getPaths().stream())
-                        .orElseGet(Stream::empty))
+                .flatMap(this::getV1HTTPIngressPathStream)
                 .map(V1HTTPIngressPath::getPath)
                 .findFirst();
+    }
+
+    private Stream<V1HTTPIngressPath> getV1HTTPIngressPathStream(V1IngressRule rule) {
+        return Optional.ofNullable(rule.getHttp())
+                .map(http -> http.getPaths().stream())
+                .orElseGet(Stream::empty);
     }
 
     private Optional<String> getHost(V1Ingress v1Ingress) {

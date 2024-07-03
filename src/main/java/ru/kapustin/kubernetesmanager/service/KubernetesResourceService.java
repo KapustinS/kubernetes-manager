@@ -84,6 +84,7 @@ public class KubernetesResourceService {
         try (Reader reader = new StringReader(configFile)){
             KubeConfig kubeConfig = KubeConfig.loadKubeConfig(reader);
             ApiClient client = ClientBuilder.kubeconfig(kubeConfig).build();
+            client.setReadTimeout(60000);
             return Optional.ofNullable(client);
         } catch (IOException e) {
             LOGGER.error("Error while getting kubernetes client from config file");

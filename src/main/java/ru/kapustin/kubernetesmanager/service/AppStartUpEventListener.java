@@ -1,4 +1,4 @@
-package ru.kapustin.kubernetesmanager.service.listener;
+package ru.kapustin.kubernetesmanager.service;
 
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
@@ -6,7 +6,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Service;
-import ru.kapustin.kubernetesmanager.service.InitKubernetesResourceService;
 
 import java.util.concurrent.CompletableFuture;
 
