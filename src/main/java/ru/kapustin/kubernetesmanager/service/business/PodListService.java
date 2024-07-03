@@ -1,4 +1,4 @@
-package ru.kapustin.kubernetesmanager.service;
+package ru.kapustin.kubernetesmanager.service.business;
 
 import io.kubernetes.client.openapi.models.V1ContainerStatus;
 import io.kubernetes.client.openapi.models.V1ObjectMeta;
@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import ru.kapustin.kubernetesmanager.mapper.ResourcesMapper;
 import ru.kapustin.kubernetesmanager.model.Pod;
 import ru.kapustin.kubernetesmanager.model.PodListResponse;
+import ru.kapustin.kubernetesmanager.service.KubernetesObjectsFetcherService;
 
 import java.time.OffsetDateTime;
 import java.util.List;
@@ -20,10 +21,10 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class PodListService {
     private final ResourcesMapper mapper;
-    private final KubernetesResourceFetcherService kubernetesResourceFetcherService;
+    private final KubernetesObjectsFetcherService kubernetesObjectsFetcherService;
 
     public PodListResponse getPods() {
-        List<V1Pod> v1Pods = kubernetesResourceFetcherService.getPods();
+        List<V1Pod> v1Pods = kubernetesObjectsFetcherService.getPods();
         List<Pod> pods = getPodItems(v1Pods);
         Integer total = pods.size();
         return getResponse(pods, total);

@@ -1,4 +1,4 @@
-package ru.kapustin.kubernetesmanager.service;
+package ru.kapustin.kubernetesmanager.service.business;
 
 import io.kubernetes.client.openapi.models.V1Node;
 import io.kubernetes.client.openapi.models.V1NodeStatus;
@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import ru.kapustin.kubernetesmanager.mapper.ResourcesMapper;
 import ru.kapustin.kubernetesmanager.model.Node;
 import ru.kapustin.kubernetesmanager.model.NodeListResponse;
+import ru.kapustin.kubernetesmanager.service.KubernetesObjectsFetcherService;
 
 import java.util.List;
 import java.util.Map;
@@ -18,7 +19,7 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class NodeListService {
     private final ResourcesMapper mapper;
-    private final KubernetesResourceFetcherService kubernetesResourceFetcherService;
+    private final KubernetesObjectsFetcherService kubernetesResourceFetcherService;
     public NodeListResponse getNodes() {
         List<V1Node> v1Nodes = kubernetesResourceFetcherService.getNodes();
         List<Node> nodes = getNodeItems(v1Nodes);

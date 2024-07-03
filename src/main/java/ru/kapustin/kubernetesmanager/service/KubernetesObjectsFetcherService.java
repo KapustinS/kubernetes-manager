@@ -16,8 +16,8 @@ import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
-public class KubernetesResourceFetcherService {
-    private static final Logger LOGGER = LoggerFactory.getLogger(KubernetesResourceFetcherService.class);
+public class KubernetesObjectsFetcherService {
+    private static final Logger LOGGER = LoggerFactory.getLogger(KubernetesObjectsFetcherService.class);
 
     private final KubernetesResourceInformerContextManager contextManager;
 
@@ -28,16 +28,6 @@ public class KubernetesResourceFetcherService {
             return List.of();
         }
         return getV1Pods(context);
-    }
-
-    public List<V1Pod> getNamespacedPods(String namespace) {
-        KubernetesResourceInformerContext context = contextManager.getContext();
-        if (context == null) {
-            LOGGER.error("PodInformerContext is null");
-            return List.of();
-        }
-        List<V1Pod> pods = getV1Pods(context);
-        return filteredPods(namespace, pods);
     }
 
     public List<V1Node> getNodes() {
@@ -57,15 +47,6 @@ public class KubernetesResourceFetcherService {
         }
         List<V1Ingress> ingresses = getV1Ingresses(context);
         return filteredIngresses(namespace, ingresses);
-    }
-
-    protected List<V1Pod> filteredPods(String namespace, List<V1Pod> pods) {
-        return Optional.ofNullable(pods).orElse(List.of())
-                .stream()
-                .filter(pod -> pod.getMetadata() != null)
-                .filter(pod -> pod.getMetadata().getNamespace() != null)
-                .filter(pod -> pod.getMetadata().getNamespace().equalsIgnoreCase(namespace))
-                .toList();
     }
 
     protected List<V1Ingress> filteredIngresses(String namespace, List<V1Ingress> ingresses) {

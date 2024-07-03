@@ -3,14 +3,14 @@ package ru.kapustin.kubernetesmanager.service;
 import io.kubernetes.client.informer.SharedInformerFactory;
 import io.kubernetes.client.openapi.apis.CoreV1Api;
 import io.kubernetes.client.openapi.apis.NetworkingV1Api;
-import io.kubernetes.client.openapi.models.V1Pod;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import ru.kapustin.kubernetesmanager.model.KubernetesResourceInformerContext;
+import ru.kapustin.kubernetesmanager.service.informer.KubernetesResourceInformerContextBuilderService;
+import ru.kapustin.kubernetesmanager.service.informer.KubernetesResourceInformerFactoryService;
 
-import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -19,7 +19,8 @@ public class InitKubernetesResourceService {
     private static final Logger LOGGER = LoggerFactory.getLogger(InitKubernetesResourceService.class);
 
     private final KubernetesResourceService kubernetesResourceService;
-    private final KubernetesResourceInformerContextBuilderService builderService;
+    private final KubernetesResourceInformerFactoryService informerFactoryService;
+    private final KubernetesResourceInformerContextBuilderService contextBuilderService;
     private final KubernetesResourceInformerContextManager contextManager;
 
     public void watchResources() {
@@ -44,8 +45,9 @@ public class InitKubernetesResourceService {
         }
         NetworkingV1Api networkingV1Api = networkingV1ApiOptional.get();
 
-        KubernetesResourceInformerContext context = builderService.getKubernetesResourceInformerContext(coreV1Api, networkingV1Api, informerFactory);
-        if (context == null) return;
+        informerFactoryService.registerInformers(informerFactory, coreV1Api, networkingV1Api);
+
+        KubernetesResourceInformerContext context = contextBuilderService.buildContext(informerFactory);
 
         contextManager.putContext(context);
 

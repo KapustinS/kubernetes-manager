@@ -1,4 +1,4 @@
-package ru.kapustin.kubernetesmanager.service;
+package ru.kapustin.kubernetesmanager.service.business;
 
 import io.kubernetes.client.openapi.models.*;
 import lombok.RequiredArgsConstructor;
@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 import ru.kapustin.kubernetesmanager.mapper.ResourcesMapper;
 import ru.kapustin.kubernetesmanager.model.Ingress;
 import ru.kapustin.kubernetesmanager.model.IngressListResponse;
+import ru.kapustin.kubernetesmanager.service.KubernetesObjectsFetcherService;
 
 import java.util.Collection;
 import java.util.List;
@@ -17,10 +18,10 @@ import java.util.stream.Stream;
 @RequiredArgsConstructor
 public class IngressListService {
     private final ResourcesMapper mapper;
-    private final KubernetesResourceFetcherService kubernetesResourceFetcherService;
+    private final KubernetesObjectsFetcherService kubernetesObjectsFetcherService;
 
     public IngressListResponse getIngresses(String namespace) {
-        List<V1Ingress> v1Ingresses = kubernetesResourceFetcherService.getNamespacedIngresses(namespace);
+        List<V1Ingress> v1Ingresses = kubernetesObjectsFetcherService.getNamespacedIngresses(namespace);
         List<Ingress> ingresses = getIngressItems(v1Ingresses);
         Integer total = ingresses.size();
         return getResponse(ingresses, total);

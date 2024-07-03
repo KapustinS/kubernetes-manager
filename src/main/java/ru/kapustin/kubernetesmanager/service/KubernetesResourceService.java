@@ -28,10 +28,6 @@ public class KubernetesResourceService {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(KubernetesResourceService.class);
 
-    public KubernetesResourceService() {
-        LOGGER.info("Kubernetes config file path: {}", configFilePath);
-    }
-
     public Optional<CoreV1Api> getCoreV1Api() {
         Optional<ApiClient> clientOptional = getApiClient();
         if (clientOptional.isEmpty()) {

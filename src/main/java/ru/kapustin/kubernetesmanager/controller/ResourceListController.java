@@ -6,10 +6,9 @@ import org.springframework.web.bind.annotation.RestController;
 import ru.kapustin.kubernetesmanager.model.IngressListResponse;
 import ru.kapustin.kubernetesmanager.model.NodeListResponse;
 import ru.kapustin.kubernetesmanager.model.PodListResponse;
-import ru.kapustin.kubernetesmanager.service.IngressListService;
-import ru.kapustin.kubernetesmanager.service.NodeListService;
-import ru.kapustin.kubernetesmanager.service.PodListService;
-import ru.kapustin.kubernetesmanager.controller.ResourceListApi;
+import ru.kapustin.kubernetesmanager.service.business.IngressListService;
+import ru.kapustin.kubernetesmanager.service.business.NodeListService;
+import ru.kapustin.kubernetesmanager.service.business.PodListService;
 
 @RestController
 @RequiredArgsConstructor

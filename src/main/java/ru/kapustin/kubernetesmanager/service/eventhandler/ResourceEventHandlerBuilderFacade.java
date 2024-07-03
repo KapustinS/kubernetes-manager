@@ -1,8 +1,7 @@
-package ru.kapustin.kubernetesmanager.service;
+package ru.kapustin.kubernetesmanager.service.eventhandler;
 
 import io.kubernetes.client.informer.ResourceEventHandler;
 import io.kubernetes.client.openapi.models.V1Ingress;
-import io.kubernetes.client.openapi.models.V1Namespace;
 import io.kubernetes.client.openapi.models.V1Node;
 import io.kubernetes.client.openapi.models.V1Pod;
 import lombok.RequiredArgsConstructor;
